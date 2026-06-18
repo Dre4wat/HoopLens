@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HoopLens</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">HoopLens</p>
+        <h1>Find the exact NBA clips you want by player, season, game, and play type.</h1>
+        <p class="subtext">Search once, then build a clean video tape from detailed shot types, play types, special tags, and defensive-action tags that can be inferred from NBA play-by-play.</p>
+      </div>
+    </header>
+
+    <section class="setupCard">
+      <div class="stepTitle">
+        <span>1</span>
+        <div>
+          <h2>Choose your source</h2>
+          <p>Start with a player and season. The game tabs below use this selection.</p>
+        </div>
+      </div>
+
+      <div class="setupGrid">
+        <div class="field searchField">
+          <label for="playerSearch">Player search</label>
+          <div class="searchWrap">
+            <input id="playerSearch" value="Josh Hart" placeholder="Type a player name..." autocomplete="off" />
+            <div id="playerDropdown" class="dropdown hidden"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="season">Season</label>
+          <select id="season"></select>
+        </div>
+
+        <div class="field">
+          <label for="seasonType">Season type</label>
+          <select id="seasonType">
+            <option selected>Playoffs</option>
+            <option>Regular Season</option>
+            <option>Pre Season</option>
+          </select>
+        </div>
+
+        <button id="searchPlayers" class="primary">Search player</button>
+      </div>
+
+      <div class="selectedRow">
+        <div class="field selectedPlayerField">
+          <label for="playerSelect">Selected player</label>
+          <select id="playerSelect" disabled>
+            <option value="">Search first</option>
+          </select>
+        </div>
+        <button id="loadGames" disabled>Load this player's games</button>
+      </div>
+    </section>
+
+    <section class="tabs" aria-label="App modes">
+      <button class="tab active" data-tab="playerGame">Player Game</button>
+      <button class="tab" data-tab="seasonTape">Season Tape</button>
+      <button class="tab" data-tab="gameMix">Game Mix</button>
+    </section>
+
+    <section id="playerGame" class="tabPanel active">
+      <div class="panelHeader">
+        <div class="stepTitle compact">
+          <span>2</span>
+          <div>
+            <h2>Player Game</h2>
+            <p>Pick one game and show only the selected player's events.</p>
+          </div>
+        </div>
+        <div class="miniActions">
+          <label class="toggle"><input id="playerVideoOnly" type="checkbox" checked /> Video-only</label>
+          <button id="loadPlayerGameEvents" class="primary" disabled>Show player events</button>
+          <button id="loadAllVideos" disabled>Load visible videos</button>
+        </div>
+      </div>
+
+      <div class="field wide">
+        <label for="gameSelect">Game</label>
+        <select id="gameSelect" disabled>
+          <option value="">Load games first</option>
+        </select>
+      </div>
+    </section>
+
+    <section id="seasonTape" class="tabPanel">
+      <div class="panelHeader">
+        <div class="stepTitle compact">
+          <span>2</span>
+          <div>
+            <h2>Season Tape</h2>
+            <p>Scan the entire selected season for that player, then select multiple play types or shot types.</p>
+          </div>
+        </div>
+        <div class="miniActions">
+          <label class="toggle"><input id="seasonVideoOnly" type="checkbox" checked /> Video-only</label>
+          <select id="orderMode" title="Order">
+            <option value="chrono" selected>Chronological</option>
+            <option value="random">Random</option>
+          </select>
+          <button id="randomizeNow">Randomize</button>
+          <button id="loadSeasonEvents" class="primary" disabled>Build season tape</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameMix" class="tabPanel">
+      <div class="panelHeader">
+        <div class="stepTitle compact">
+          <span>2</span>
+          <div>
+            <h2>Game Mix</h2>
+            <p>Use the selected game, but show selected play types from everyone instead of one player.</p>
+          </div>
+        </div>
+        <div class="miniActions">
+          <label class="toggle"><input id="gameVideoOnly" type="checkbox" checked /> Video-only</label>
+          <button id="loadGameMix" class="primary" disabled>Show everyone in game</button>
+        </div>
+      </div>
+
+      <div class="field wide">
+        <label for="mixGameSelect">Game</label>
+        <select id="mixGameSelect" disabled>
+          <option value="">Load games first</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="filterCard">
+      <div class="filterHeader">
+        <div>
+          <h2>Filters</h2>
+          <p>Select none to show all. Select multiple boxes to create a custom tape.</p>
+        </div>
+        <div class="filterActions">
+          <button id="clearFilters" disabled>Clear filters</button>
+          <button id="showSelectedOnly" disabled>Apply selected filters</button>
+        </div>
+      </div>
+
+      <div class="checkGrid">
+        <div class="checkPanel">
+          <h3>Event groups</h3>
+          <div id="categoryChecks" class="checks emptyChecks">Load events first</div>
+        </div>
+        <div class="checkPanel">
+          <h3>Play types</h3>
+          <div id="playTypeChecks" class="checks emptyChecks">Load events first</div>
+        </div>
+        <div class="checkPanel">
+          <h3>Shot types</h3>
+          <div id="shotTypeChecks" class="checks emptyChecks">Load events first</div>
+        </div>
+        <div class="checkPanel">
+          <h3>Special tags found</h3>
+          <div id="specialTagChecks" class="checks emptyChecks">Special tags appear here when found or inferred.</div>
+        </div>
+      </div>
+
+      <details class="tagGuide" open>
+        <summary>All possible HoopLens tags</summary>
+        <p>These are the tags HoopLens can try to create from NBA play-by-play. The checklist above only shows tags that exist in the events you loaded.</p>
+        <div class="tagGuideGrid">
+          <div>
+            <h3>Clock / score tags</h3>
+            <div id="clockTagList" class="tagPills">Loading...</div>
+          </div>
+          <div>
+            <h3>Shot / dunk detail tags</h3>
+            <div id="detailTagList" class="tagPills">Loading...</div>
+          </div>
+          <div>
+            <h3>Defense / possession tags</h3>
+            <div id="defenseTagList" class="tagPills">Loading...</div>
+          </div>
+          <div>
+            <h3>Not reliable from basic play-by-play</h3>
+            <div id="unavailableTagList" class="tagPills mutedPills">Loading...</div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section id="status" class="status"></section>
+    <section id="events" class="grid"></section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
