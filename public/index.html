@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HoopLens — Record Book Film Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800;900&family=Saira+Semi+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="topHud">
+      <div class="brandBlock">
+        <div class="brandMark">HL</div>
+        <div>
+          <p class="hudKicker">The Record Book Style: Film Room</p>
+          <h1>HoopLens</h1>
+        </div>
+      </div>
+      <div class="hudMeta">
+        <span>NBA event clips</span>
+        <span>Record Book theme</span>
+        <span>Unofficial</span>
+      </div>
+    </header>
+
+    <section class="rosterConsole recordRosterConsole">
+      <div class="rosterChrome">
+        <div>
+          <div class="eyebrow">Roster Viewer · Detailed View</div>
+          <h2>Pick a player, then HoopLens loads that player’s game-event tape.</h2>
+        </div>
+        <div class="rosterHintStrip">
+          <span>A Select</span>
+          <span>B Back</span>
+          <span>Y Quick Tape</span>
+        </div>
+      </div>
+
+      <div class="ros-controls">
+        <div class="sel-wrap">
+          <label for="season">Season</label>
+          <div class="sel"><select id="season" class="styled"></select></div>
+        </div>
+        <div class="sel-wrap">
+          <label for="rosterTeam">Team</label>
+          <div class="sel"><select id="rosterTeam" class="styled"></select></div>
+        </div>
+        <div class="sel-wrap">
+          <label for="seasonType">Season Type</label>
+          <div class="sel">
+            <select id="seasonType" class="styled">
+              <option selected>Playoffs</option>
+              <option>Regular Season</option>
+              <option>Pre Season</option>
+            </select>
+          </div>
+        </div>
+        <div class="sel-wrap rosterSearchWrap">
+          <label for="rosterSearch">Roster Search</label>
+          <input id="rosterSearch" class="styledSearch" placeholder="Filter roster..." autocomplete="off" />
+        </div>
+      </div>
+
+      <div id="playerHero" class="ros-hero playerHero"></div>
+
+      <section class="ros-table rosterBoard">
+        <div class="rt-head">
+          <div id="rosterTitle" class="rt-title">Roster</div>
+          <div id="rosterNote" class="rt-note">Loading player file...</div>
+        </div>
+        <div class="rt-scroll rosterScroll">
+          <table class="roster">
+            <thead>
+              <tr>
+                <th class="l">#</th>
+                <th class="l">Player</th>
+                <th class="l">Pos</th>
+                <th>Age</th>
+                <th class="lead">PTS</th>
+                <th>TRB</th>
+                <th>AST</th>
+                <th>FG%</th>
+                <th>3PT</th>
+                <th>G</th>
+              </tr>
+            </thead>
+            <tbody id="rosterTableBody">
+              <tr><td colspan="10" class="emptyCell">Loading roster...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="rosterActions rb-actions">
+        <button id="rosterLoadGames" class="primary" disabled>Load selected player's games</button>
+        <button id="rosterBuildTape" disabled>Build full season tape</button>
+        <p>Some older or inactive players may not return NBA event clips. If no games/events load, try a newer season or turn off video-only.</p>
+      </div>
+    </section>
+
+    <section class="hiddenApiControls" aria-hidden="true">
+      <input id="playerSearch" placeholder="API player search" autocomplete="off" />
+      <div id="playerDropdown" class="dropdown hidden"></div>
+      <button id="searchPlayers">Search player</button>
+      <select id="playerSelect" disabled><option value="">Select from roster</option></select>
+      <button id="loadGames" disabled>Load this player's games</button>
+    </section>
+
+    <section class="modeDock" aria-label="HoopLens modes">
+      <button class="tab active" data-tab="playerGame"><b>Player Game</b><span>One player, one game</span></button>
+      <button class="tab" data-tab="seasonTape"><b>Season Tape</b><span>One player, full season</span></button>
+      <button class="tab" data-tab="gameMix"><b>Game Mix</b><span>Everyone in selected game</span></button>
+    </section>
+
+    <section id="playerGame" class="tabPanel active">
+      <div class="panelHeader">
+        <div>
+          <p class="miniLabel">Step 2</p>
+          <h2>Choose a game and show only this player's events</h2>
+        </div>
+        <div class="miniActions">
+          <label class="toggle"><input id="playerVideoOnly" type="checkbox" checked /> Video-only</label>
+          <button id="loadPlayerGameEvents" class="primary" disabled>Show player events</button>
+          <button id="loadAllVideos" disabled>Load visible videos</button>
+        </div>
+      </div>
+      <label class="wideField">
+        <span>Game</span>
+        <select id="gameSelect" disabled><option value="">Load games first</option></select>
+      </label>
+    </section>
+
+    <section id="seasonTape" class="tabPanel">
+      <div class="panelHeader">
+        <div>
+          <p class="miniLabel">Season Tape</p>
+          <h2>Scan the selected player's whole season</h2>
+          <p>After it loads, use the checklists to cut the tape by play type, shot type, tags, or event group.</p>
+        </div>
+        <div class="miniActions">
+          <label class="toggle"><input id="seasonVideoOnly" type="checkbox" checked /> Video-only</label>
+          <select id="orderMode" title="Order">
+            <option value="chrono" selected>Chronological</option>
+            <option value="random">Random</option>
+          </select>
+          <button id="randomizeNow">Randomize</button>
+          <button id="loadSeasonEvents" class="primary" disabled>Build season tape</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameMix" class="tabPanel">
+      <div class="panelHeader">
+        <div>
+          <p class="miniLabel">Game Mix</p>
+          <h2>Show selected play types from everyone in one game</h2>
+        </div>
+        <div class="miniActions">
+          <label class="toggle"><input id="gameVideoOnly" type="checkbox" checked /> Video-only</label>
+          <button id="loadGameMix" class="primary" disabled>Show everyone in game</button>
+        </div>
+      </div>
+      <label class="wideField">
+        <span>Game</span>
+        <select id="mixGameSelect" disabled><option value="">Load games first</option></select>
+      </label>
+    </section>
+
+    <section class="filterCard">
+      <div class="filterHeader">
+        <div>
+          <p class="miniLabel">Cut the tape</p>
+          <h2>Filters</h2>
+          <p>Select none to show all. Select multiple boxes to build a custom event tape.</p>
+        </div>
+        <div class="filterActions">
+          <button id="clearFilters" disabled>Clear filters</button>
+          <button id="showSelectedOnly" disabled>Apply selected filters</button>
+        </div>
+      </div>
+
+      <div class="checkGrid">
+        <div class="checkPanel"><h3>Event groups</h3><div id="categoryChecks" class="checks emptyChecks">Load events first</div></div>
+        <div class="checkPanel"><h3>Play types</h3><div id="playTypeChecks" class="checks emptyChecks">Load events first</div></div>
+        <div class="checkPanel"><h3>Shot types</h3><div id="shotTypeChecks" class="checks emptyChecks">Load events first</div></div>
+        <div class="checkPanel"><h3>Tags found</h3><div id="specialTagChecks" class="checks emptyChecks">Special tags appear here when found or inferred.</div></div>
+      </div>
+
+      <details class="tagGuide">
+        <summary>All possible HoopLens tags</summary>
+        <p>These are the tags HoopLens can try to create from NBA play-by-play. The checklist only shows tags found in the events you loaded.</p>
+        <div class="tagGuideGrid">
+          <div><h3>Clock / score</h3><div id="clockTagList" class="tagPills">Loading...</div></div>
+          <div><h3>Shot / dunk detail</h3><div id="detailTagList" class="tagPills">Loading...</div></div>
+          <div><h3>Defense / possession</h3><div id="defenseTagList" class="tagPills">Loading...</div></div>
+          <div><h3>Not reliable from basic PBP</h3><div id="unavailableTagList" class="tagPills mutedPills">Loading...</div></div>
+        </div>
+      </details>
+    </section>
+
+    <section id="status" class="status"></section>
+    <section id="events" class="grid"></section>
+  </main>
+
+  <script src="nba-players.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
