@@ -4,6 +4,8 @@ HoopLens is a no-npm local NBA event video explorer.
 
 ## What is new in this version
 
+- Removed all OVR/overall rating display from the 2K-style roster and player card.
+
 - Site name changed to **HoopLens**.
 - Fixed the player-search dropdown so it stays above the rest of the page.
 - Added an always-visible **All possible HoopLens tags** guide.
